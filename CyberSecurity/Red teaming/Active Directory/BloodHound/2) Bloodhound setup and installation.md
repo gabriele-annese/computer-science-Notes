@@ -57,8 +57,6 @@ Once the service is installed, we can start the service:
 
 #### Start Service
 
-  BloodHound Setup and Installation
-
 ```powershell-session
 PS C:\htb> net start neo4j
 The Neo4j Graph Database - neo4j service is starting..
@@ -84,10 +82,7 @@ Authenticate to Neo4j in the web console with username `neo4j` and password `
 **Note:** We may get a warning from the Browser or the AV that the file is malicious. Ignore and allow the download.
 
 2. Unzip the folder and double-click BloodHound.exe.
-    
 3. Authenticate with the credentials you set up for neo4j.
-    
-
 ![text](https://academy.hackthebox.com/storage/modules/69/bloodhound_authentication.jpg)
 
 ---
@@ -96,8 +91,6 @@ Authenticate to Neo4j in the web console with username `neo4j` and password `
 The first thing we need to do is download and install `Java Oracle JDK 11`. We will update our apt sources to install the correct package:
 
 #### Updating APT sources to install Java
-
-  BloodHound Setup and Installation
 
 ```shell-session
 BusySec@htb[/htb]# echo "deb http://httpredir.debian.org/debian stretch-backports main" | sudo tee -a /etc/apt/sources.list.d/stretch-backports.list
@@ -108,8 +101,6 @@ BusySec@htb[/htb]# sudo apt-get update
 With this update, if Java is not installed when we try to install Neo4j, it will automatically install it as part of the Neo4j installation. Let's add the apt sources for Neo4j installation:
 
 #### Updating APT sources to install Neo4j
-
-  BloodHound Setup and Installation
 
 ```shell-session
 BusySec@htb[/htb]$ wget -O - https://debian.neo4j.com/neotechnology.gpg.key | sudo apt-key add -
@@ -122,8 +113,6 @@ Before installing Neo4j, we need to install the `apt-transport-https` package 
 
 #### Installing required packages
 
-  BloodHound Setup and Installation
-
 ```shell-session
 BusySec@htb[/htb]$ sudo apt-get install apt-transport-https
 ...SNIP...
@@ -132,8 +121,6 @@ BusySec@htb[/htb]$ sudo apt-get install apt-transport-https
 Now we can install Neo4j. Let's first list the available options and pick the latest 4.4.X version.
 
 #### Installing Neo4j
-
-  BloodHound Setup and Installation
 
 ```shell-session
 BusySec@htb[/htb]$ sudo apt list -a neo4j 
@@ -157,8 +144,6 @@ At the time of writing. The latest version is Neo4j 4.4.16, let's install that v
 
 #### Installing Neo4j 4.4.X
 
-  BloodHound Setup and Installation
-
 ```shell-session
 BusySec@htb[/htb]$ sudo apt install neo4j=1:4.4.16 -y
 Reading package lists... Done
@@ -178,8 +163,6 @@ Next, we need to make sure we are using Java 11. We can update which java versio
 
 #### Change Java version to 11
 
-  BloodHound Setup and Installation
-
 ```shell-session
 BusySec@htb[/htb]$ sudo update-alternatives --config java
 There are 2 choices for the alternative java (providing /usr/bin/java).
@@ -198,8 +181,6 @@ Press <enter> to keep the current choice[*], or type selection number: 1
 We can start `Neo4j` as a console application to verify it starts up without errors:
 
 #### Running Neo4j as console
-
-  BloodHound Setup and Installation
 
 ```shell-session
 BusySec@htb[/htb]$ cd /usr/bin
@@ -231,8 +212,6 @@ Starting Neo4j.
 To start and stop the service, we can use the following commands:
 
 #### Start Neo4j
-
-  BloodHound Setup and Installation
 
 ```shell-session
 BusySec@htb[/htb]$ sudo systemctl start neo4j
