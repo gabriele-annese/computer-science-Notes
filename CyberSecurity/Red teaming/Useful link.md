@@ -2,6 +2,10 @@
 # Malware Dev / Exploit Dev
 
 ## Windows
+
+## Technique
+- [API Hooking - Tramopoline in x64](https://www.ragestorm.net/blogs/?p=107)
+-  [RDI](https://disman.tl/2015/01/30/an-improved-reflective-dll-injection-technique.html)
 ### Internals
 [Win32 API](https://learn.microsoft.com/en-us/windows/win32/api/)
 ### EDR & AV Bypass
@@ -21,6 +25,8 @@
 - [Osep-nots](https://github.com/beauknowstech/OSEP-Everything)
 - [Chisel for Tunneling](https://github.com/jpillora/chisel)
 
+# SCADA
+- [NIST SP 800-82 Rev3 — Guide to OT Security](NIST SP 800-82 Rev3 — Guide to OT Security)
 # Blogs
 ## CTF
 - https://0xdf.gitlab.io/
