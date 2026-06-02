@@ -34,3 +34,38 @@ In k8s version 1.19+, we can specify the –replicas option to create a deployme
 ```bash
 kubectl create deployment --image=nginx nginx --replicas=4 --dry-run=client -o yaml > nginx-deployment.yaml
 ```
+
+**List all api-resource type available on k8s**
+```bash
+kubectl api-resources
+```
+
+Example of output
+```text
+kubectl api-resources
+NAME                                SHORTNAMES   APIVERSION                          NAMESPACED   KIND
+bindings                                         v1                                  true         Binding
+componentstatuses                   cs           v1                                  false        ComponentStatus
+configmaps                          cm           v1                                  true         ConfigMap
+endpoints                           ep           v1                                  true         Endpoints
+events                              ev           v1                                  true         Event
+limitranges                         limits       v1                                  true         LimitRange
+namespaces                          ns           v1                                  false        Namespace
+nodes                               no           v1                                  false        Node
+persistentvolumeclaims              pvc          v1                                  true         PersistentVolumeClaim
+persistentvolumes                   pv           v1                                  false        PersistentVolume
+pods                                po           v1                                  true         Pod
+
+.........
+```
+
+**Explain resource**
+In k8s it's possible use the `explain` command to list all top level fields
+```bash
+kubectl explain pods
+```
+
+to list **all fields** run
+```bash
+kubectl explain pods --recursive
+```
