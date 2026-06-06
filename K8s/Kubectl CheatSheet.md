@@ -69,3 +69,19 @@ to list **all fields** run
 ```bash
 kubectl explain pods --recursive
 ```
+
+## Check cluster's component status
+
+``` bash
+kubectl get cs
+# or
+kubectl get componentstatuses
+```
+
+```bash
+kubectl get pods -n kube-system
+```
+
+```bash
+yq -p yaml -o json binding-object.yaml > binding.json
+```
