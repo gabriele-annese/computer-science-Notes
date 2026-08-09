@@ -85,3 +85,157 @@ kubectl get pods -n kube-system
 ```bash
 yq -p yaml -o json binding-object.yaml > binding.json
 ```
+
+# Taint & Tolleration
+
+```bash
+kubectl taint nodes node01 spray=mortein:NoSchedule
+```
+
+```bash
+k describe node/controlplane | grep Taints
+```
+
+Create a pod with toleration
+```yaml
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: bee
+spec:
+  containers:
+    - image: nginx
+      name: bee
+  tolerations:
+    - key: "spray"
+      value: "mortein"
+      effect: "NoSchedule"
+      operator: "Equal"
+```
+
+Remove a Taint from node
+```bash
+kubectl taint nodes controlplane node-role.kubernetes.io/control-plane:NoSchedule-
+```
+
+
+```bash
+kubectl get nodes/node01 -o json | jq -r '.metadata.labels'
+```
+
+to assign a label on node
+
+```bash
+kubectl label node/node01 color=blue
+```
+
+show labels
+```bash
+kubectl get nodes node01 --show-label
+```
+
+node affinity
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: blue
+  name: blue
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: blue
+  template:
+    metadata:
+      labels:
+        app: blue
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                - key: color
+                  operator: In
+                  values:
+                    - blue
+      containers:
+      - image: nginx
+        name: nginx
+```
+
+
+operator exists
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: red
+  name: red
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: red
+  template:
+    metadata:
+      labels:
+        app: red
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                - key: node-role.kubernetes.io/control-plane
+                  operator: Exists
+      containers:
+      - image: nginx
+        name: nginx
+~                                                                                               
+```
+
+create a static pod 
+```bash
+kubectl run --restart=Never --image=busybox static-busybox --dry-run=client -o yaml --command -- sleep 1000 > /etc/kubernetes/manifests/static-busybox.yaml
+```
+
+## Challenge
+
+### Delete a static pod on node01
+
+Firs i jump into node01 system with ssh
+```bash
+ssh node01
+```
+
+kublet is the component that manage a static pod. To search the path where the manifest of the static pod are saved follow this step
+```bash
+ps aux | grep kubelet
+```
+
+take the path of the config in my case **/var/lib/kubelet/config.yaml** and search staticPod
+
+```bash
+node01 ~ ➜  cat /var/lib/kubelet/config.yaml | grep static
+staticPodPath: /etc/just-to-mess-with-you
+```
+
+and voulà, now remove manifest of the static pod in question
+
+```bash
+node01 ~ ➜  ls /etc/just-to-mess-with-you/
+greenbox.yaml
+
+node01 ~ ➜  rm /etc/just-to-mess-with-you/greenbox.yaml
+```
+
+restart the kublet service
+```bash
+node01 ~ ➜  systemctl restart kubelet
+```
