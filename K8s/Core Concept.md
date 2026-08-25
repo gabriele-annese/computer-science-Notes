@@ -1,5 +1,6 @@
 ---
-tags: [k8s]
+tags:
+  - k8s
 ---
 
 # Core Concepts

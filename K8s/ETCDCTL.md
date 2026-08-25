@@ -1,3 +1,9 @@
+---
+tags:
+  - k8s
+  - etcdctl
+---
+
 `etcdctl` is a CLI tool using to interact with [ETCD](https://etcd.io/) . etcdctl can interact with ETCD server using 2 API version. 
 
 Command supported by version 2
