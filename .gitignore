@@ -1,3 +1,16 @@
+# --- Obsidian ---
+.obsidian/*
 
+# Config che ha senso condividere tra macchine
+!.obsidian/app.json
+!.obsidian/appearance.json
+!.obsidian/hotkeys.json
+!.obsidian/core-plugins.json
+!.obsidian/community-plugins.json
 
-.obsidian
+# Riapre il percorso fino al plugin, un livello alla volta
+!.obsidian/plugins/
+.obsidian/plugins/*
+!.obsidian/plugins/obsidian-spaced-repetition/
+.obsidian/plugins/obsidian-spaced-repetition/*
+!.obsidian/plugins/obsidian-spaced-repetition/data.json
