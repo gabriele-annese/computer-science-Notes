@@ -88,6 +88,15 @@ yq -p yaml -o json binding-object.yaml > binding.json
 
 # Taint & Tolleration
 
+apply taint on `ubuntu1` node
+```bash
+kubectl taint node ubuntu1 node.role.kubernetes.io/control-plane:NoSchedule
+```
+remove taint  on `ubuntu1` node
+```bash
+kubectl taint node ubuntu1 node.role.kubernetes.io/control-plane:NoSchedule-
+```
+
 ```bash
 kubectl taint nodes node01 spray=mortein:NoSchedule
 ```

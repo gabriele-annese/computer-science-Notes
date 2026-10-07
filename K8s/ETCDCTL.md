@@ -49,3 +49,12 @@ kubectl exec etcd-controlplane -n kube-system -- sh -c "ETCDCTL_API=3 etcdctl ge
   --cert /etc/kubernetes/pki/etcd/server.crt \
   --key /etc/kubernetes/pki/etcd/server.key"
 ```
+
+#flashcards/k8s/etcd
+
+Quale tool in CLI si utilizza per interagire con ETCD? :: Si usa etcdctl
+<!--SR:!fsrs,2026-09-16T06:22:22.730Z,8,8.2956,1,2,1,0,0,2026-09-08T06:22:22.730Z-->
+
+Come si setta la versione corretta delle API per comunicare con etcd? 
+?
+Si utilizza la varibile d'ambinete `export ETCDCTL_API=3`

@@ -5,6 +5,9 @@ tags:
 
 
 This is the data types that ARM support
+- **byte**: 8 bit
+- **half word**: 16 bit
+- **word**: 32 bit 
 
 ![](Assest/Pasted%20image%2020260829085722.png)
 
@@ -40,3 +43,4 @@ In ARM there are  [30 general-purpose 32-bit registers](http://infocenter.arm.c
 - **R14: LR (Link Register)**: When a function call is made, the Link Register gets updated with a memory address referencig the next instruction where the function was initated from. Doing this allow to the program return to the "partent" function that initated the "child" function.
 
 - **R15: PC (Program Counter)**: The Program Counter is automatically incremented by the size of the instruction executed. This size is always 4 bytes in ARM state and 2 bytes in THUMB mode. During execution PC stores the address of the current istruction plus 8 (two ARM instruction) in ARM state, and the current instruction plus 4 (two Thumb instrctions) in Thumb(v1).
+
